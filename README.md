@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # MindHarbor Chatbot
 
 Supportive mental-health chatbot with a Python backend and a responsive web frontend.
@@ -38,3 +39,5 @@ python3 backend.py
 
 - Without `OPENAI_API_KEY`, the app still works using built-in supportive fallback responses.
 - If crisis language is detected, the app returns immediate safety messaging and hotline guidance.
+=======
+
