@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MindHarbor Chat</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <p class="eyebrow">Mental Wellness Companion</p>
+        <h1>MindHarbor Chat</h1>
+        <p class="subhead">
+          A supportive AI space to reflect, regulate, and take one practical next step.
+        </p>
+      </section>
+
+      <section class="chat-panel">
+        <div class="safety-banner" role="note">
+          If you are in immediate danger, call 911 (U.S.) or your local emergency number.
+          You can also call or text 988 in the U.S.
+        </div>
+
+        <div id="chatLog" class="chat-log" aria-live="polite"></div>
+
+        <form id="chatForm" class="composer">
+          <label for="chatInput" class="sr-only">Type your message</label>
+          <textarea
+            id="chatInput"
+            rows="2"
+            placeholder="Share what you’re feeling..."
+            maxlength="1200"
+            required
+          ></textarea>
+          <button id="sendBtn" type="submit">Send</button>
+        </form>
+      </section>
+    </main>
+
+    <template id="bubbleTemplate">
+      <article class="bubble-wrap">
+        <p class="bubble"></p>
+      </article>
+    </template>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
