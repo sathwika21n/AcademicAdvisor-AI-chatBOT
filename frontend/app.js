@@ -3,12 +3,24 @@ const chatForm = document.getElementById("chatForm");
 const chatInput = document.getElementById("chatInput");
 const sendBtn = document.getElementById("sendBtn");
 const bubbleTemplate = document.getElementById("bubbleTemplate");
+const majorInput = document.getElementById("majorInput");
+const yearInput = document.getElementById("yearInput");
+const interestsInput = document.getElementById("interestsInput");
+const completedInput = document.getElementById("completedInput");
+const quickButtons = document.querySelectorAll(".quick-btn");
 
 const history = [];
 
 const openingMessage =
-  "Hi, I’m MindHarbor. I can offer emotional support and practical coping steps. What’s on your mind today?";
+  "Hi, I am your AI academic advisor. I can build a 4-year schedule, check prerequisites, suggest electives, and warn about graduation requirements.";
 appendMessage("assistant", openingMessage);
+
+quickButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    chatInput.value = btn.dataset.message || "";
+    chatInput.focus();
+  });
+});
 
 chatForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -24,7 +36,16 @@ chatForm.addEventListener("submit", async (event) => {
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message, history }),
+      body: JSON.stringify({
+        message,
+        history,
+        profile: {
+          major: majorInput.value.trim(),
+          year: yearInput.value.trim(),
+          interests: interestsInput.value.trim(),
+          completed_courses: completedInput.value.trim(),
+        },
+      }),
     });
 
     if (!response.ok) {
@@ -32,13 +53,13 @@ chatForm.addEventListener("submit", async (event) => {
     }
 
     const data = await response.json();
-    const reply = data.reply || "I’m here with you. Could you say a bit more?";
+    const reply = data.reply || "Please share a bit more detail so I can help.";
     appendMessage("assistant", reply);
     history.push({ role: "assistant", content: reply });
   } catch (error) {
     appendMessage(
       "assistant",
-      "I’m having trouble connecting right now. Please try again in a moment."
+      "I am having trouble connecting right now. Please try again in a moment."
     );
   } finally {
     setBusy(false);

@@ -1,7 +1,13 @@
-<<<<<<< HEAD
-# MindHarbor Chatbot
+# DegreePath Advisor
 
-Supportive mental-health chatbot with a Python backend and a responsive web frontend.
+AI academic advisor chatbot with a Python backend and responsive web frontend.
+
+## Features
+
+- Plan a suggested 4-year degree schedule
+- Check course prerequisites
+- Suggest electives based on interests
+- Warn about graduation requirement gaps
 
 ## Run locally
 
@@ -18,7 +24,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Optional: enable LLM responses:
+3. Optional: enable LLM-enhanced responses:
 
 ```bash
 export OPENAI_API_KEY="your_api_key"
@@ -37,7 +43,5 @@ python3 backend.py
 
 ## Notes
 
-- Without `OPENAI_API_KEY`, the app still works using built-in supportive fallback responses.
-- If crisis language is detected, the app returns immediate safety messaging and hotline guidance.
-=======
-
+- Without `OPENAI_API_KEY`, the app still works in rule-based advisor mode.
+- The included catalog and graduation rules are sample data; adjust them to your university policy.

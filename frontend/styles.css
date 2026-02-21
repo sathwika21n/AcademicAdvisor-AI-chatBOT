@@ -70,12 +70,64 @@ h1 {
   min-height: 70vh;
 }
 
-.safety-banner {
-  background: #ffefe2;
-  color: #7a4121;
+.profile-panel {
+  padding: 16px;
+  border-radius: 18px;
+  background: #fffdf8;
+  box-shadow: var(--shadow);
+  animation: rise 500ms ease;
+}
+
+.profile-panel h2 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+}
+
+.profile-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.profile-grid .full {
+  grid-column: 1 / -1;
+}
+
+.profile-grid label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
   font-size: 0.9rem;
-  padding: 10px 14px;
-  border-bottom: 1px solid #f1dccb;
+}
+
+.profile-grid input {
+  border: 1px solid #cfd8da;
+  border-radius: 10px;
+  padding: 9px 10px;
+  font: inherit;
+  color: var(--ink);
+}
+
+.profile-grid input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+.quick-actions {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quick-btn {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid #cfe0dc;
+  background: #eff8f6;
+  color: #0f5f55;
+  font-weight: 600;
 }
 
 .chat-log {
@@ -189,5 +241,9 @@ button:disabled {
   .chat-panel {
     min-height: calc(100vh - 180px);
     border-radius: 14px;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
   }
 }
