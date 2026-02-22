@@ -12,7 +12,7 @@ DegreePath Advisor is a web chatbot that helps students with:
 It runs in:
 
 - rule-based mode (default, no API key needed)
-- LLM-enhanced mode (if `OPENAI_API_KEY` is set)
+- LLM-enhanced mode (if `OPENAI_API_KEY` is set; supports OpenAI-compatible providers via `OPENAI_BASE_URL`, such as OpenRouter)
 
 ## Architecture
 

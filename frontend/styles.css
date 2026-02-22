@@ -100,15 +100,18 @@ h1 {
   font-size: 0.9rem;
 }
 
-.profile-grid input {
+.profile-grid input,
+.profile-grid select {
   border: 1px solid #cfd8da;
   border-radius: 10px;
   padding: 9px 10px;
   font: inherit;
   color: var(--ink);
+  background: #fff;
 }
 
-.profile-grid input:focus {
+.profile-grid input:focus,
+.profile-grid select:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 4px var(--ring);

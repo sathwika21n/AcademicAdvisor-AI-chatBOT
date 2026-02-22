@@ -24,11 +24,19 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Optional: enable LLM-enhanced responses:
+3. Optional: enable LLM-enhanced responses (OpenAI-compatible APIs like OpenAI or OpenRouter):
 
 ```bash
 export OPENAI_API_KEY="your_api_key"
 export OPENAI_MODEL="gpt-4o-mini"
+```
+
+OpenRouter example:
+
+```bash
+export OPENAI_API_KEY="your_openrouter_key"
+export OPENAI_BASE_URL="https://openrouter.ai/api/v1"
+export OPENAI_MODEL="openrouter/auto"
 ```
 
 4. Start the app:
@@ -44,4 +52,5 @@ python3 backend.py
 ## Notes
 
 - Without `OPENAI_API_KEY`, the app still works in rule-based advisor mode.
+- You can use OpenRouter because the backend uses the OpenAI-compatible SDK interface (`OPENAI_BASE_URL`).
 - The included catalog and graduation rules are sample data; adjust them to your university policy.

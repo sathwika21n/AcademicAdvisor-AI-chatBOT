@@ -3,6 +3,7 @@ const chatForm = document.getElementById("chatForm");
 const chatInput = document.getElementById("chatInput");
 const sendBtn = document.getElementById("sendBtn");
 const bubbleTemplate = document.getElementById("bubbleTemplate");
+const collegeInput = document.getElementById("collegeInput");
 const majorInput = document.getElementById("majorInput");
 const yearInput = document.getElementById("yearInput");
 const interestsInput = document.getElementById("interestsInput");
@@ -10,10 +11,13 @@ const completedInput = document.getElementById("completedInput");
 const quickButtons = document.querySelectorAll(".quick-btn");
 
 const history = [];
+let collegeOptions = [];
 
 const openingMessage =
   "Hi, I am your AI academic advisor. I can build a 4-year schedule, check prerequisites, suggest electives, and warn about graduation requirements.";
 appendMessage("assistant", openingMessage);
+
+loadProgramOptions();
 
 quickButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -40,6 +44,7 @@ chatForm.addEventListener("submit", async (event) => {
         message,
         history,
         profile: {
+          college: collegeInput.value,
           major: majorInput.value.trim(),
           year: yearInput.value.trim(),
           interests: interestsInput.value.trim(),
@@ -81,4 +86,65 @@ function setBusy(busy) {
   sendBtn.disabled = busy;
   sendBtn.textContent = busy ? "Sending..." : "Send";
   chatInput.disabled = busy;
+}
+
+async function loadProgramOptions() {
+  try {
+    const response = await fetch("/api/options");
+    if (!response.ok) return;
+    const data = await response.json();
+    collegeOptions = data.colleges || [];
+    populateColleges(data.default_college, data.default_major);
+  } catch (error) {
+    // Leave fields usable even if options endpoint fails.
+  }
+}
+
+function populateColleges(defaultCollege, defaultMajor) {
+  collegeInput.innerHTML = "";
+  collegeOptions.forEach((college) => {
+    const option = document.createElement("option");
+    option.value = college.name;
+    option.textContent = college.name;
+    collegeInput.appendChild(option);
+  });
+
+  if (collegeInput.options.length === 0) {
+    const fallback = document.createElement("option");
+    fallback.value = "";
+    fallback.textContent = "No colleges loaded";
+    collegeInput.appendChild(fallback);
+    return;
+  }
+
+  collegeInput.value = defaultCollege || collegeInput.options[0].value;
+  populateMajors(collegeInput.value, defaultMajor);
+  collegeInput.addEventListener("change", () => populateMajors(collegeInput.value));
+}
+
+function populateMajors(collegeName, preferredMajor) {
+  majorInput.innerHTML = "";
+  const college = collegeOptions.find((item) => item.name === collegeName);
+  const majors = college?.majors || [];
+
+  majors.forEach((major) => {
+    const option = document.createElement("option");
+    option.value = major;
+    option.textContent = major;
+    majorInput.appendChild(option);
+  });
+
+  if (majors.length === 0) {
+    const fallback = document.createElement("option");
+    fallback.value = "";
+    fallback.textContent = "No majors available";
+    majorInput.appendChild(fallback);
+    return;
+  }
+
+  if (preferredMajor && majors.includes(preferredMajor)) {
+    majorInput.value = preferredMajor;
+  } else {
+    majorInput.value = majors[0];
+  }
 }
