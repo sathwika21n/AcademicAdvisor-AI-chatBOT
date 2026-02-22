@@ -59,7 +59,9 @@ chatForm.addEventListener("submit", async (event) => {
 
     const data = await response.json();
     const reply = data.reply || "Please share a bit more detail so I can help.";
-    appendMessage("assistant", reply);
+    const mode = data.mode ? ` [mode: ${data.mode}]` : "";
+    const renderedReply = `${reply}${mode}`;
+    appendMessage("assistant", renderedReply);
     history.push({ role: "assistant", content: reply });
   } catch (error) {
     appendMessage(
@@ -96,7 +98,10 @@ async function loadProgramOptions() {
     collegeOptions = data.colleges || [];
     populateColleges(data.default_college, data.default_major);
   } catch (error) {
-    // Leave fields usable even if options endpoint fails.
+    appendMessage(
+      "assistant",
+      "Could not load college/major options from /api/options. Restart the backend and refresh the page."
+    );
   }
 }
 
