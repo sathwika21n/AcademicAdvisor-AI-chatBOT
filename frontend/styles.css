@@ -83,6 +83,76 @@ h1 {
   font-size: 1.1rem;
 }
 
+.directory-toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.directory-toolbar input {
+  border: 1px solid #cfd8da;
+  border-radius: 10px;
+  padding: 9px 10px;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+}
+
+.directory-toolbar input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+.directory-status {
+  color: var(--muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.school-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+  max-height: 168px;
+  overflow: auto;
+  padding: 2px;
+}
+
+.school-result-btn {
+  border: 1px solid #d7e2e4;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  padding: 7px 10px;
+  font: inherit;
+  font-size: 0.86rem;
+  line-height: 1.2;
+  cursor: pointer;
+  text-align: left;
+}
+
+.school-result-btn:hover {
+  border-color: #bad3ce;
+  background: #f7fbfa;
+}
+
+.school-result-btn.active {
+  border-color: #98cfc4;
+  background: #e9f6f3;
+  color: #0f5f55;
+}
+
+.school-results-more {
+  width: 100%;
+  color: var(--muted);
+  font-size: 0.82rem;
+  padding: 2px 2px 0;
+}
+
 .profile-grid {
   display: grid;
   gap: 10px;
@@ -109,6 +179,7 @@ h1 {
   color: var(--ink);
   background: #fff;
 }
+
 
 .profile-grid input:focus,
 .profile-grid select:focus {
@@ -247,6 +318,10 @@ button:disabled {
   }
 
   .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .directory-toolbar {
     grid-template-columns: 1fr;
   }
 }

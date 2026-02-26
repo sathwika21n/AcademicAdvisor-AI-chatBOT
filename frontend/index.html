@@ -18,10 +18,13 @@
 
       <section class="profile-panel">
         <h2>Student Profile</h2>
+        <div class="directory-toolbar">
+          <input id="collegeSearchInput" type="text" placeholder="Search U.S. colleges (e.g., Arizona State)" />
+          <button id="collegeSearchBtn" type="button">Search Schools</button>
+          <span id="directoryStatus" class="directory-status">Loading directory...</span>
+        </div>
+        <div id="schoolResults" class="school-results" aria-label="School search results"></div>
         <div class="profile-grid">
-          <label>College
-            <select id="collegeInput"></select>
-          </label>
           <label>Major
             <select id="majorInput"></select>
           </label>

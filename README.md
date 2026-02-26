@@ -34,7 +34,7 @@ export OPENAI_MODEL="gpt-4o-mini"
 OpenRouter example:
 
 ```bash
-export OPENAI_API_KEY="your_openrouter_key"
+export OPENAI_API_KEY="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"
 export OPENAI_BASE_URL="https://openrouter.ai/api/v1"
 export OPENAI_MODEL="openrouter/auto"
 ```
