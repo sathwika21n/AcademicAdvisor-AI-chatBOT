@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+import hmac
 from typing import Any, Dict, List
 
 import streamlit as st
@@ -95,6 +97,10 @@ def inject_styles() -> None:
 
 
 def init_state() -> None:
+    if "authenticated" not in st.session_state:
+        st.session_state.authenticated = False
+    if "auth_user" not in st.session_state:
+        st.session_state.auth_user = ""
     if "messages" not in st.session_state:
         st.session_state.messages = [
             {
@@ -129,6 +135,43 @@ def init_state() -> None:
         st.session_state.major_options = college_data["majors"] if college_data else [default_major]
 
 
+def validate_login(username: str, password: str) -> bool:
+    expected_user = os.getenv("APP_USERNAME", "student")
+    expected_password = os.getenv("APP_PASSWORD", "advisor123")
+    user_ok = hmac.compare_digest(username.strip(), expected_user)
+    pass_ok = hmac.compare_digest(password, expected_password)
+    return user_ok and pass_ok
+
+
+def render_login() -> None:
+    st.markdown(
+        """
+        <section class="hero">
+          <span class="eyebrow">Secure Access</span>
+          <h1 style="margin:0.15rem 0 0.15rem 0;">Sign In to DegreePath</h1>
+          <p class="subhead">Use your account credentials to access advising tools.</p>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    left, center, right = st.columns([1, 1.2, 1])
+    with center:
+        with st.form("login_form", clear_on_submit=False):
+            username = st.text_input("Username")
+            password = st.text_input("Password", type="password")
+            submitted = st.form_submit_button("Log In", use_container_width=True)
+        if submitted:
+            if validate_login(username, password):
+                st.session_state.authenticated = True
+                st.session_state.auth_user = username.strip()
+                st.success("Login successful.")
+                st.rerun()
+            else:
+                st.error("Invalid username or password.")
+        st.caption("Set `APP_USERNAME` and `APP_PASSWORD` env vars to change login credentials.")
+
+
 def assistant_reply(message: str, profile: Dict[str, str]) -> Dict[str, str]:
     safe_history: List[Dict[str, str]] = []
     for item in st.session_state.messages[-10:]:
@@ -158,6 +201,15 @@ def update_major_options_from_selection(selected: str, options: Dict[str, Any]) 
 
 def render_sidebar() -> None:
     with st.sidebar:
+        st.subheader("Account")
+        if st.session_state.authenticated:
+            st.caption(f"Signed in as `{st.session_state.auth_user or 'user'}`")
+            if st.button("Log Out", use_container_width=True):
+                st.session_state.authenticated = False
+                st.session_state.auth_user = ""
+                st.rerun()
+        st.divider()
+
         st.header("Student Profile")
         options = backend.build_options_payload()
         directory_on = backend.collegescorecard_enabled()
@@ -269,6 +321,9 @@ def render_chat() -> None:
 def main() -> None:
     inject_styles()
     init_state()
+    if not st.session_state.authenticated:
+        render_login()
+        return
     render_sidebar()
     render_chat()
 

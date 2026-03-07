@@ -41,13 +41,20 @@ export OPENAI_BASE_URL="https://openrouter.ai/api/v1"
 export OPENAI_MODEL="openrouter/auto"
 ```
 
-4. Start the Streamlit frontend:
+4. Optional: set app login credentials (defaults shown):
+
+```bash
+export APP_USERNAME="student"
+export APP_PASSWORD="advisor123"
+```
+
+5. Start the Streamlit frontend:
 
 ```bash
 streamlit run streamlit_app.py
 ```
 
-5. Open:
+6. Open:
 
 `http://localhost:8501`
 
@@ -66,3 +73,4 @@ Then open `http://localhost:5001`.
 - Without `OPENAI_API_KEY`, the app still works in rule-based advisor mode.
 - You can use OpenRouter because the backend uses the OpenAI-compatible SDK interface (`OPENAI_BASE_URL`).
 - The included catalog and graduation rules are sample data; adjust them to your university policy.
+- Streamlit login uses `APP_USERNAME` and `APP_PASSWORD`; if unset, defaults are `student` / `advisor123`.
