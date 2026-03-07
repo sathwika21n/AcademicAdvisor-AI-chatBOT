@@ -1,6 +1,6 @@
 # DegreePath Advisor
 
-AI academic advisor chatbot with a Python backend and responsive web frontend.
+AI academic advisor chatbot with a Python backend and Streamlit frontend.
 
 ## Features
 
@@ -34,21 +34,32 @@ export OPENAI_MODEL="gpt-4o-mini"
 OpenRouter example:
 
 ```bash
-export COLLEGESCORECARD_API_KEY="your_api_key"
-export OPENAI_API_KEY="your_openrouter_api_key"
+export COLLEGESCORECARD_API_KEY="you_API_key"
+export US_GOV_API_URL="https://developer.nrel.gov/api/alt-fuel-stations/v1.json?"
+export OPENAI_API_KEY="your_api_key"
 export OPENAI_BASE_URL="https://openrouter.ai/api/v1"
 export OPENAI_MODEL="openrouter/auto"
 ```
 
-4. Start the app:
+4. Start the Streamlit frontend:
+
+```bash
+streamlit run streamlit_app.py
+```
+
+5. Open:
+
+`http://localhost:8501`
+
+## Optional: run Flask API directly
+
+If you want the API-only server for testing:
 
 ```bash
 python3 backend.py
 ```
 
-5. Open:
-
-`http://localhost:5001`
+Then open `http://localhost:5001`.
 
 ## Notes
 

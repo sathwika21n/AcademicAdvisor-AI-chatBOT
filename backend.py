@@ -524,7 +524,7 @@ def collegescorecard_enabled() -> bool:
 def collegescorecard_request(params: Dict[str, Any]) -> Dict[str, Any]:
     base_url = os.getenv(
         "COLLEGESCORECARD_BASE_URL",
-        "https://api.data.gov/ed/collegescorecard/v1/schools",
+        "https://api.data.gov/ed/collegescorecard/v1/schools", # api link for colleges from us.gov
     )
     query = {"api_key": get_collegescorecard_key()}
     query.update(params)
