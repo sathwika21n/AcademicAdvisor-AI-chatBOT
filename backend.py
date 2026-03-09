@@ -1,22 +1,14 @@
 import os
 import re
-import json
-import urllib.parse
-import urllib.request
-from pathlib import Path
 from typing import Any, Dict, List, Set, Tuple
 
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request
 
 try:
     from openai import OpenAI
 except Exception:  # pragma: no cover
     OpenAI = None
 
-
-BASE_DIR = Path(__file__).resolve().parent
-STATIC_DIR = BASE_DIR / "frontend"
-INDEX_FILE = "index.html"
 
 SYSTEM_PROMPT = (
     "You are an AI academic advisor. Help with 4-year schedules, prerequisites, "
@@ -439,33 +431,32 @@ def fallback_response(message: str, profile: Dict[str, Any]) -> str:
     college, major, program, exact_match = get_resolved_program(profile)
     selected_college = (profile.get("college") or "").strip()
     selected_major = (profile.get("major") or "").strip()
-    selected_college_id = (profile.get("college_id") or "").strip()
 
     sections: List[str] = []
-    if selected_college_id and (selected_college or selected_major) and not exact_match:
+
+    if (selected_college or selected_major) and not exact_match:
         sections.append(
-            f"Directory-only mode: You selected {selected_college or 'a U.S. college'} / "
-            f"{selected_major or 'a major'} from the live College Scorecard directory."
+            f"Program context: {selected_college or 'University not provided'} / "
+            f"{selected_major or 'Major not provided'}."
         )
         sections.append(
-            "I can still give general planning advice, but full prerequisite/graduation audits "
-            "require a mapped local degree plan for that exact program."
+            "This exact program is not in the local sample dataset, so I will provide general advising guidance."
         )
         if "electives" in intents:
             sections.append(
-                "Elective Suggestions:\n- Share your interests and completed courses, and I can suggest focus areas and likely elective categories."
+                "Elective Suggestions:\n- Share interests and career goals, and I can suggest likely elective areas and course types."
             )
         if "prereq" in intents:
             sections.append(
-                "Prerequisite Check:\n- I need that school's course catalog/degree sheet to verify exact prerequisites for this program."
+                "Prerequisite Check:\n- Exact prerequisites vary by catalog year; verify with your university's official course catalog."
             )
         if "plan" in intents:
             sections.append(
-                "4-Year Plan:\n- I can draft a generic semester-by-semester plan, but it will not reflect official program sequencing without the degree plan."
+                "4-Year Plan:\n- I can draft a semester-by-semester plan structure and sequencing assumptions for your stated university/major."
             )
         if "graduation" in intents:
             sections.append(
-                "Graduation Audit:\n- Exact graduation requirements depend on the university catalog year and major requirements."
+                "Graduation Audit:\n- I can estimate progress, but exact requirement checks need your school's official degree worksheet."
             )
         return "\n\n".join(sections)
 
@@ -509,192 +500,13 @@ def llm_response(client: Any, history: List[Dict[str, str]], profile: Dict[str, 
     return completion.choices[0].message.content or rule_result
 
 
-app = Flask(__name__, static_folder=str(STATIC_DIR), static_url_path="/static")
+app = Flask(__name__)
 client = create_client()
-
-
-def get_collegescorecard_key() -> str:
-    return (os.getenv("COLLEGESCORECARD_API_KEY") or "").strip()
-
-
-def collegescorecard_enabled() -> bool:
-    return bool(get_collegescorecard_key())
-
-
-def collegescorecard_request(params: Dict[str, Any]) -> Dict[str, Any]:
-    base_url = os.getenv(
-        "COLLEGESCORECARD_BASE_URL",
-        "https://api.data.gov/ed/collegescorecard/v1/schools", # api link for colleges from us.gov
-    )
-    query = {"api_key": get_collegescorecard_key()}
-    query.update(params)
-    url = f"{base_url}?{urllib.parse.urlencode(query, doseq=True)}"
-    with urllib.request.urlopen(url, timeout=10) as response:  # nosec B310
-        return json.loads(response.read().decode("utf-8"))
-
-
-def _paginated_collegescorecard_results(params: Dict[str, Any], max_pages: int = 200) -> List[Dict[str, Any]]:
-    all_results: List[Dict[str, Any]] = []
-    per_page = int(params.get("per_page", 100) or 100)
-    page = 0
-
-    while page < max_pages:
-        page_params = dict(params)
-        page_params["page"] = page
-        data = collegescorecard_request(page_params)
-        page_results = data.get("results", [])
-        if not isinstance(page_results, list) or not page_results:
-            break
-
-        all_results.extend(page_results)
-
-        metadata = data.get("metadata") or {}
-        total = metadata.get("total")
-        if isinstance(total, int) and total <= len(all_results):
-            break
-
-        if len(page_results) < per_page:
-            break
-
-        page += 1
-
-    return all_results
-
-
-def directory_search_schools(q: str) -> List[Dict[str, Any]]:
-    if not collegescorecard_enabled():
-        return []
-    params = {
-        "fields": "id,school.name,school.city,school.state,latest.student.size",
-        "per_page": 100,
-        "sort": "latest.student.size:desc",
-        "school.operating": 1,
-    }
-    if q.strip():
-        params["school.name"] = q.strip()
-    raw_results = _paginated_collegescorecard_results(params)
-    results = []
-    seen_school_ids: Set[str] = set()
-    for item in raw_results:
-        school_id = item.get("id")
-        name = item.get("school.name")
-        if not school_id or not name:
-            continue
-        school_id_str = str(school_id)
-        if school_id_str in seen_school_ids:
-            continue
-        seen_school_ids.add(school_id_str)
-        city = item.get("school.city") or ""
-        state = item.get("school.state") or ""
-        label = f"{name} ({city}, {state})" if city or state else name
-        results.append(
-            {
-                "school_id": school_id_str,
-                "name": name,
-                "city": city,
-                "state": state,
-                "label": label,
-                "student_size": item.get("latest.student.size"),
-            }
-        )
-    return results
-
-
-def _extract_program_titles(result: Dict[str, Any]) -> List[str]:
-    titles: Set[str] = set()
-    flattened_title = result.get("latest.programs.cip_4_digit.title")
-    if isinstance(flattened_title, list):
-        for item in flattened_title:
-            if isinstance(item, str) and item.strip():
-                titles.add(item.strip())
-
-    latest = result.get("latest")
-    if isinstance(latest, dict):
-        programs = latest.get("programs")
-        if isinstance(programs, list):
-            for program in programs:
-                if not isinstance(program, dict):
-                    continue
-                cip = program.get("cip_4_digit")
-                if isinstance(cip, dict):
-                    title = cip.get("title")
-                    if isinstance(title, str) and title.strip():
-                        titles.add(title.strip())
-        elif isinstance(programs, dict):
-            cip_list = programs.get("cip_4_digit")
-            if isinstance(cip_list, list):
-                for cip in cip_list:
-                    if isinstance(cip, dict):
-                        title = cip.get("title")
-                        if isinstance(title, str) and title.strip():
-                            titles.add(title.strip())
-
-    return sorted(titles)
-
-
-def directory_school_majors(school_id: str, q: str = "") -> List[str]:
-    if not collegescorecard_enabled() or not school_id:
-        return []
-    params = {
-        "id": school_id,
-        "fields": "id,school.name,latest.programs.cip_4_digit.title",
-        "keys_nested": "true",
-        "all_programs_nested": "true",
-        "per_page": 1,
-    }
-    data = collegescorecard_request(params)
-    results = data.get("results", [])
-    if not results:
-        return []
-    majors = _extract_program_titles(results[0])
-    if q.strip():
-        query = q.strip().lower()
-        majors = [m for m in majors if query in m.lower()]
-    return majors[:200]
-
-
-@app.get("/")
-def home() -> Any:
-    return send_from_directory(STATIC_DIR, INDEX_FILE)
 
 
 @app.get("/api/options")
 def options() -> Any:
     return jsonify(build_options_payload())
-
-
-@app.get("/api/directory/status")
-def directory_status() -> Any:
-    return jsonify({"enabled": collegescorecard_enabled(), "provider": "College Scorecard (US)"})
-
-
-@app.get("/api/schools/search")
-def schools_search() -> Any:
-    q = (request.args.get("q") or "").strip()
-    try:
-        if collegescorecard_enabled():
-            return jsonify({"source": "collegescorecard", "results": directory_search_schools(q)})
-        return jsonify({"source": "local", "results": []})
-    except Exception as exc:
-        return jsonify({"source": "collegescorecard", "error": str(exc), "results": []}), 502
-
-
-@app.get("/api/majors/search")
-def majors_search() -> Any:
-    school_id = (request.args.get("school_id") or "").strip()
-    q = (request.args.get("q") or "").strip()
-    try:
-        if collegescorecard_enabled():
-            return jsonify(
-                {
-                    "source": "collegescorecard",
-                    "school_id": school_id,
-                    "results": directory_school_majors(school_id, q),
-                }
-            )
-        return jsonify({"source": "local", "school_id": school_id, "results": []})
-    except Exception as exc:
-        return jsonify({"source": "collegescorecard", "error": str(exc), "results": []}), 502
 
 
 @app.post("/api/chat")

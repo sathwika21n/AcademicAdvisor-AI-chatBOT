@@ -34,27 +34,20 @@ export OPENAI_MODEL="gpt-4o-mini"
 OpenRouter example:
 
 ```bash
-export COLLEGESCORECARD_API_KEY="you_API_key"
-export US_GOV_API_URL="https://developer.nrel.gov/api/alt-fuel-stations/v1.json?"
 export OPENAI_API_KEY="your_api_key"
 export OPENAI_BASE_URL="https://openrouter.ai/api/v1"
 export OPENAI_MODEL="openrouter/auto"
 ```
 
-4. Optional: set app login credentials (defaults shown):
+4. Start the Streamlit frontend:
 
 ```bash
-export APP_USERNAME="student"
-export APP_PASSWORD="advisor123"
-```
-
-5. Start the Streamlit frontend:
-
-```bash
+export APP_USERNAME="your_username"
+export APP_PASSWORD="your_strong_password"
 streamlit run streamlit_app.py
 ```
 
-6. Open:
+5. Open:
 
 `http://localhost:8501`
 
@@ -73,4 +66,3 @@ Then open `http://localhost:5001`.
 - Without `OPENAI_API_KEY`, the app still works in rule-based advisor mode.
 - You can use OpenRouter because the backend uses the OpenAI-compatible SDK interface (`OPENAI_BASE_URL`).
 - The included catalog and graduation rules are sample data; adjust them to your university policy.
-- Streamlit login uses `APP_USERNAME` and `APP_PASSWORD`; if unset, defaults are `student` / `advisor123`.
