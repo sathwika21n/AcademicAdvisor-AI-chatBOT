@@ -24,16 +24,21 @@ def inject_styles() -> None:
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
         :root {
-            --bg-a: #07111c;
-            --bg-b: #102436;
-            --ink: #edf7ff;
-            --muted: #a8c0d2;
-            --card: #10283a;
-            --accent: #1cc39d;
-            --accent-2: #59a9ff;
-            --accent-soft: #103f38;
-            --line: #2b4b60;
+            --bg-a: #0f172a;
+            --bg-b: #1a2332;
+            --ink: #f0f4f8;
+            --muted: #94a3b8;
+            --card: #1e293b;
+            --accent: #3b82f6;
+            --accent-2: #10b981;
+            --accent-3: #f59e0b;
+            --accent-soft: #1e3a8a;
+            --line: #334155;
             --shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+            --user-bg: #1e3a8a;
+            --bot-bg: #1e293b;
+            --user-text: #dbeafe;
+            --bot-text: #e2e8f0;
         }
 
         html, body, [class*="css"] {
@@ -43,13 +48,13 @@ def inject_styles() -> None:
 
         .stApp {
             background:
-                radial-gradient(52rem 52rem at 12% -8%, rgba(28,195,157,0.18) 1%, rgba(28,195,157,0) 50%),
-                radial-gradient(50rem 50rem at 100% -12%, rgba(89,169,255,0.20) 2%, rgba(89,169,255,0) 50%),
+                radial-gradient(52rem 52rem at 12% -8%, rgba(59,130,246,0.15) 1%, rgba(59,130,246,0) 50%),
+                radial-gradient(50rem 50rem at 100% -12%, rgba(16,185,129,0.15) 2%, rgba(16,185,129,0) 50%),
                 linear-gradient(150deg, var(--bg-a) 0%, var(--bg-b) 100%);
         }
 
         [data-testid="stSidebar"] {
-            background: linear-gradient(180deg, rgba(9,25,38,0.95), rgba(11,33,49,0.95) 100%);
+            background: linear-gradient(180deg, rgba(15,23,42,0.95), rgba(26,35,50,0.95) 100%);
             border-right: 1px solid var(--line);
         }
 
@@ -65,18 +70,18 @@ def inject_styles() -> None:
         [data-testid="stForm"] p,
         [data-testid="stForm"] span,
         [data-testid="stForm"] div {
-            color: #eff8ff !important;
+            color: #e2e8f0 !important;
         }
 
         .hero h1,
         .hero .subhead,
         .hero .eyebrow {
-            color: #f3fbff !important;
+            color: #f0f4f8 !important;
         }
 
         .stCaption,
         [data-testid="stForm"] .stCaption {
-            color: #d6ecff !important;
+            color: #cbd5e1 !important;
         }
 
         h1, h2, h3, h4 {
@@ -87,10 +92,10 @@ def inject_styles() -> None:
 
         .hero {
             padding: 1.45rem 1.2rem 1.1rem 1.2rem;
-            border: 1px solid rgba(87,166,255,0.25);
+            border: 1px solid #3b82f6;
             border-radius: 20px;
             background:
-                linear-gradient(130deg, rgba(25,194,155,0.25), rgba(87,166,255,0.22), rgba(14,34,48,0.92));
+                linear-gradient(130deg, #1e3a8a, #1e293b);
             box-shadow: var(--shadow);
             margin-bottom: 1rem;
         }
@@ -99,8 +104,8 @@ def inject_styles() -> None:
             display: inline-block;
             font-size: 0.78rem;
             font-weight: 700;
-            color: #0a5d56;
-            background: var(--accent-soft);
+            color: #dbeafe;
+            background: #1e40af;
             border-radius: 999px;
             padding: 0.28rem 0.7rem;
             margin-bottom: 0.45rem;
@@ -114,19 +119,36 @@ def inject_styles() -> None:
             margin-bottom: 0;
         }
 
+        /* AI Chat Messages - Better Visibility */
+        .stChatMessage[data-testid="stChatMessage"]:has(> div > div:first-child > p:contains("assistant")) {
+            background: linear-gradient(135deg, #1e293b 0%, #1a2332 100%);
+            border: 1px solid #3b82f6;
+            color: var(--bot-text);
+        }
+
         .stChatMessage {
             border-radius: 16px;
             border: 1px solid var(--line);
-            background: #112c40;
+            background: linear-gradient(135deg, #1e293b 0%, #1a2332 100%);
             box-shadow: 0 8px 24px rgba(10, 45, 60, 0.06);
+        }
+
+        /* User messages with blue gradient */
+        [data-testid="stChatMessage"] > div > div:last-child {
+            color: var(--bot-text) !important;
+        }
+
+        .stChatMessage [role="img"] ~ p,
+        .stChatMessage [role="img"] ~ div > p {
+            color: var(--bot-text) !important;
         }
 
         .pill {
             padding: 0.24rem 0.62rem;
             border-radius: 999px;
-            border: 1px solid var(--line);
-            background: #123247;
-            color: #d8ebf8;
+            border: 1px solid #3b82f6;
+            background: #1e3a8a;
+            color: #dbeafe;
             font-size: 0.78rem;
             display: inline-block;
             margin-right: 0.45rem;
@@ -140,11 +162,11 @@ def inject_styles() -> None:
         }
 
         .visual-card {
-            border: 1px solid #31546d;
+            border: 1px solid #3b82f6;
             border-radius: 16px;
             padding: 0.8rem 0.9rem;
             background:
-                linear-gradient(145deg, rgba(18,49,71,0.95), rgba(16,40,59,0.95));
+                linear-gradient(145deg, #1e3a8a, #1e293b);
             box-shadow: 0 10px 25px rgba(21, 32, 43, 0.08);
         }
 
@@ -182,60 +204,61 @@ def inject_styles() -> None:
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: linear-gradient(130deg, var(--accent), var(--accent-2));
-            box-shadow: 0 0 0 3px rgba(15,118,110,0.16);
+            background: linear-gradient(130deg, #3b82f6, #10b981);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.16);
         }
 
         .bar {
             flex: 1;
             height: 5px;
             border-radius: 99px;
-            background: linear-gradient(90deg, rgba(15,118,110,0.92), rgba(11,91,152,0.72));
+            background: linear-gradient(90deg, rgba(59,130,246,0.92), rgba(16,185,129,0.72));
         }
 
         .stButton > button {
             border-radius: 12px;
-            border: 1px solid #37607a;
-            background: linear-gradient(145deg, #12344b, #15455f);
-            color: #e8f4ff;
+            border: 1px solid #3b82f6;
+            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            color: #ffffff;
+
             font-weight: 600;
         }
 
         .stButton > button:hover {
-            border-color: #57a6ff;
+            border-color: #60a5fa;
             color: #ffffff;
-            box-shadow: 0 10px 22px rgba(87,166,255,0.28);
+            box-shadow: 0 10px 22px rgba(59,130,246,0.4);
         }
 
         [data-testid="stChatInput"] {
-            border: 1px solid #3f6680;
+            border: 1px solid #475569;
             border-radius: 14px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.35);
         }
 
         .stTextInput > div > div > input,
         .stTextArea textarea {
-            background-color: #0e2b40 !important;
-            color: #edf7ff !important;
-            border: 1px solid #4f7791 !important;
+            background-color: #1a2332 !important;
+            color: #f0f4f8 !important;
+            border: 1px solid #475569 !important;
             border-radius: 10px !important;
         }
 
         .stTextInput > div > div > input::placeholder,
         .stTextArea textarea::placeholder {
-            color: #9bc0d8 !important;
+            color: #94a3b8 !important;
             opacity: 1;
         }
 
         .stTextInput > div > div > input:focus,
         .stTextArea textarea:focus {
-            border: 1px solid #63b6ff !important;
-            box-shadow: 0 0 0 2px rgba(99, 182, 255, 0.28) !important;
+            border: 1px solid #3b82f6 !important;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.28) !important;
         }
 
         [data-testid="stForm"] {
-            background: linear-gradient(165deg, rgba(15,43,63,0.9), rgba(14,35,52,0.9));
-            border: 1px solid #2f556f;
+            background: linear-gradient(165deg, rgba(15,23,42,0.9), rgba(26,35,50,0.9));
+            border: 1px solid #334155;
             border-radius: 16px;
             padding: 1rem;
         }

@@ -9,6 +9,8 @@ try:
 except Exception:  # pragma: no cover
     OpenAI = None
 
+from universities_data import ACADEMIC_DATA
+
 
 SYSTEM_PROMPT = (
     "You are an AI academic advisor. Help with 4-year schedules, prerequisites, "
@@ -30,194 +32,6 @@ INTEREST_TO_ELECTIVES = {
     "finance": ["BUS340", "ECON210"],
 }
 
-ACADEMIC_DATA: Dict[str, Dict[str, Any]] = {
-    "State University": {
-        "majors": {
-            "Computer Science": {
-                "courses": {
-                    "FYS100": {"name": "First-Year Seminar", "credits": 1, "prereqs": [], "category": "gened"},
-                    "ENG101": {"name": "College Writing", "credits": 3, "prereqs": [], "category": "gened"},
-                    "MATH101": {"name": "Calculus I", "credits": 4, "prereqs": [], "category": "math"},
-                    "MATH102": {"name": "Calculus II", "credits": 4, "prereqs": ["MATH101"], "category": "math"},
-                    "CS101": {"name": "Intro to Programming", "credits": 4, "prereqs": [], "category": "core"},
-                    "CS102": {"name": "Data Structures", "credits": 4, "prereqs": ["CS101"], "category": "core"},
-                    "CS201": {"name": "Computer Organization", "credits": 3, "prereqs": ["CS102"], "category": "core"},
-                    "CS210": {"name": "Discrete Mathematics", "credits": 3, "prereqs": ["MATH101"], "category": "core"},
-                    "CS220": {"name": "Algorithms", "credits": 3, "prereqs": ["CS102", "CS210"], "category": "core"},
-                    "CS230": {"name": "Databases", "credits": 3, "prereqs": ["CS102"], "category": "core"},
-                    "CS240": {"name": "Operating Systems", "credits": 3, "prereqs": ["CS201"], "category": "core"},
-                    "CS250": {"name": "Software Engineering", "credits": 3, "prereqs": ["CS220"], "category": "core"},
-                    "STAT201": {"name": "Statistics", "credits": 3, "prereqs": ["MATH101"], "category": "math"},
-                    "HUM101": {"name": "Humanities Elective", "credits": 3, "prereqs": [], "category": "humanities"},
-                    "SOC101": {"name": "Social Science Elective", "credits": 3, "prereqs": [], "category": "social"},
-                    "CS310": {"name": "Machine Learning", "credits": 3, "prereqs": ["CS220", "STAT201"], "category": "elective"},
-                    "CS320": {"name": "Cybersecurity", "credits": 3, "prereqs": ["CS240"], "category": "elective"},
-                    "CS330": {"name": "Mobile App Development", "credits": 3, "prereqs": ["CS250"], "category": "elective"},
-                    "CS340": {"name": "Data Visualization", "credits": 3, "prereqs": ["CS230", "STAT201"], "category": "elective"},
-                    "CS350": {"name": "Cloud Computing", "credits": 3, "prereqs": ["CS240"], "category": "elective"},
-                    "CS360": {"name": "Natural Language Processing", "credits": 3, "prereqs": ["CS310"], "category": "elective"},
-                    "CS490": {"name": "Senior Capstone", "credits": 3, "prereqs": ["CS250"], "category": "capstone"},
-                },
-                "degree_requirements": {
-                    "required_courses": [
-                        "FYS100", "ENG101", "MATH101", "MATH102", "CS101", "CS102", "CS201",
-                        "CS210", "CS220", "CS230", "CS240", "CS250", "STAT201", "CS490",
-                    ],
-                    "min_credits": 120,
-                    "min_humanities_credits": 6,
-                    "min_social_credits": 6,
-                    "min_elective_credits": 15,
-                },
-                "four_year_template": [
-                    ["FYS100", "ENG101", "CS101", "MATH101"],
-                    ["MATH102", "CS102", "HUM101", "SOC101"],
-                    ["CS201", "CS210", "STAT201", "HUM101"],
-                    ["CS220", "CS230", "SOC101", "ELX100"],
-                    ["CS250", "ELX200", "ELX201", "GEN200"],
-                    ["CS240", "ELX202", "ELX203", "GEN201"],
-                    ["ELX300", "ELX301", "GEN300", "GEN301"],
-                    ["CS490", "ELX302", "ELX303", "GEN302"],
-                ],
-                "default_electives": ["CS310", "CS320", "CS330", "CS340", "CS350"],
-            },
-            "Data Science": {
-                "courses": {
-                    "FYS100": {"name": "First-Year Seminar", "credits": 1, "prereqs": [], "category": "gened"},
-                    "ENG101": {"name": "College Writing", "credits": 3, "prereqs": [], "category": "gened"},
-                    "MATH101": {"name": "Calculus I", "credits": 4, "prereqs": [], "category": "math"},
-                    "MATH102": {"name": "Calculus II", "credits": 4, "prereqs": ["MATH101"], "category": "math"},
-                    "STAT201": {"name": "Statistics I", "credits": 3, "prereqs": ["MATH101"], "category": "math"},
-                    "STAT310": {"name": "Applied Regression", "credits": 3, "prereqs": ["STAT201"], "category": "elective"},
-                    "CS101": {"name": "Intro to Programming", "credits": 4, "prereqs": [], "category": "core"},
-                    "CS102": {"name": "Data Structures", "credits": 4, "prereqs": ["CS101"], "category": "core"},
-                    "DS200": {"name": "Data Wrangling", "credits": 3, "prereqs": ["CS101"], "category": "core"},
-                    "DS210": {"name": "Data Ethics", "credits": 3, "prereqs": [], "category": "core"},
-                    "DS220": {"name": "Data Visualization", "credits": 3, "prereqs": ["DS200", "STAT201"], "category": "core"},
-                    "DS300": {"name": "Machine Learning Foundations", "credits": 3, "prereqs": ["CS102", "MATH102", "STAT201"], "category": "core"},
-                    "DS330": {"name": "Applied Machine Learning", "credits": 3, "prereqs": ["DS300"], "category": "elective"},
-                    "DS340": {"name": "Business Analytics", "credits": 3, "prereqs": ["DS220"], "category": "elective"},
-                    "HUM101": {"name": "Humanities Elective", "credits": 3, "prereqs": [], "category": "humanities"},
-                    "HUM102": {"name": "Humanities Elective II", "credits": 3, "prereqs": [], "category": "humanities"},
-                    "SOC101": {"name": "Social Science Elective", "credits": 3, "prereqs": [], "category": "social"},
-                    "SOC102": {"name": "Social Science Elective II", "credits": 3, "prereqs": [], "category": "social"},
-                    "DS490": {"name": "Data Science Capstone", "credits": 3, "prereqs": ["DS300"], "category": "capstone"},
-                },
-                "degree_requirements": {
-                    "required_courses": [
-                        "FYS100", "ENG101", "MATH101", "MATH102", "STAT201", "CS101", "CS102",
-                        "DS200", "DS210", "DS220", "DS300", "DS490",
-                    ],
-                    "min_credits": 120,
-                    "min_humanities_credits": 6,
-                    "min_social_credits": 6,
-                    "min_elective_credits": 12,
-                },
-                "four_year_template": [
-                    ["FYS100", "ENG101", "CS101", "MATH101"],
-                    ["MATH102", "STAT201", "DS210", "HUM101"],
-                    ["CS102", "DS200", "SOC101", "HUM102"],
-                    ["DS220", "SOC102", "ELX100", "GEN200"],
-                    ["DS300", "ELX200", "ELX201", "GEN201"],
-                    ["ELX202", "ELX203", "GEN202", "GEN203"],
-                    ["ELX300", "ELX301", "GEN300", "GEN301"],
-                    ["DS490", "ELX302", "ELX303", "GEN302"],
-                ],
-                "default_electives": ["DS330", "DS340", "STAT310"],
-            },
-        }
-    },
-    "Metro Tech Institute": {
-        "majors": {
-            "Computer Science": {
-                "courses": {
-                    "COLL100": {"name": "College Success", "credits": 2, "prereqs": [], "category": "gened"},
-                    "ENG110": {"name": "Technical Writing", "credits": 3, "prereqs": [], "category": "gened"},
-                    "MATH115": {"name": "Calculus for Computing", "credits": 4, "prereqs": [], "category": "math"},
-                    "CS105": {"name": "Programming Fundamentals", "credits": 4, "prereqs": [], "category": "core"},
-                    "CS115": {"name": "Object-Oriented Programming", "credits": 4, "prereqs": ["CS105"], "category": "core"},
-                    "CS205": {"name": "Data Structures", "credits": 4, "prereqs": ["CS115"], "category": "core"},
-                    "CS215": {"name": "Computer Systems", "credits": 3, "prereqs": ["CS205"], "category": "core"},
-                    "CS225": {"name": "Discrete Structures", "credits": 3, "prereqs": ["MATH115"], "category": "core"},
-                    "CS305": {"name": "Algorithms", "credits": 3, "prereqs": ["CS205", "CS225"], "category": "core"},
-                    "CS315": {"name": "Database Systems", "credits": 3, "prereqs": ["CS205"], "category": "core"},
-                    "CS325": {"name": "Operating Systems", "credits": 3, "prereqs": ["CS215"], "category": "core"},
-                    "CS335": {"name": "Software Project", "credits": 3, "prereqs": ["CS305"], "category": "core"},
-                    "STAT210": {"name": "Statistics for Engineers", "credits": 3, "prereqs": ["MATH115"], "category": "math"},
-                    "HUM200": {"name": "Humanities Elective", "credits": 3, "prereqs": [], "category": "humanities"},
-                    "SOC200": {"name": "Social Science Elective", "credits": 3, "prereqs": [], "category": "social"},
-                    "CS410": {"name": "Cloud Platforms", "credits": 3, "prereqs": ["CS325"], "category": "elective"},
-                    "CS420": {"name": "Secure Systems", "credits": 3, "prereqs": ["CS325"], "category": "elective"},
-                    "CS430": {"name": "Mobile Engineering", "credits": 3, "prereqs": ["CS335"], "category": "elective"},
-                    "CS499": {"name": "Senior Design", "credits": 3, "prereqs": ["CS335"], "category": "capstone"},
-                },
-                "degree_requirements": {
-                    "required_courses": [
-                        "COLL100", "ENG110", "MATH115", "CS105", "CS115", "CS205", "CS215",
-                        "CS225", "CS305", "CS315", "CS325", "CS335", "STAT210", "CS499",
-                    ],
-                    "min_credits": 122,
-                    "min_humanities_credits": 6,
-                    "min_social_credits": 6,
-                    "min_elective_credits": 12,
-                },
-                "four_year_template": [
-                    ["COLL100", "ENG110", "CS105", "MATH115"],
-                    ["CS115", "CS225", "HUM200", "SOC200"],
-                    ["CS205", "STAT210", "HUM200", "GEN200"],
-                    ["CS215", "CS315", "SOC200", "GEN201"],
-                    ["CS305", "ELX200", "ELX201", "GEN202"],
-                    ["CS325", "CS335", "ELX202", "GEN203"],
-                    ["ELX300", "ELX301", "GEN300", "GEN301"],
-                    ["CS499", "ELX302", "ELX303", "GEN302"],
-                ],
-                "default_electives": ["CS410", "CS420", "CS430"],
-            },
-            "Business Analytics": {
-                "courses": {
-                    "COLL100": {"name": "College Success", "credits": 2, "prereqs": [], "category": "gened"},
-                    "ENG110": {"name": "Technical Writing", "credits": 3, "prereqs": [], "category": "gened"},
-                    "MATH110": {"name": "Business Calculus", "credits": 3, "prereqs": [], "category": "math"},
-                    "STAT200": {"name": "Business Statistics", "credits": 3, "prereqs": ["MATH110"], "category": "math"},
-                    "BUS101": {"name": "Intro to Business", "credits": 3, "prereqs": [], "category": "core"},
-                    "ECON210": {"name": "Microeconomics", "credits": 3, "prereqs": [], "category": "core"},
-                    "ACCT201": {"name": "Financial Accounting", "credits": 3, "prereqs": [], "category": "core"},
-                    "BA220": {"name": "Spreadsheet Modeling", "credits": 3, "prereqs": [], "category": "core"},
-                    "BA250": {"name": "Programming for Analytics", "credits": 3, "prereqs": [], "category": "core"},
-                    "BA310": {"name": "Data Management", "credits": 3, "prereqs": ["BA250"], "category": "core"},
-                    "BA320": {"name": "Analytics Methods", "credits": 3, "prereqs": ["STAT200", "BA250"], "category": "core"},
-                    "BUS320": {"name": "Marketing Analytics", "credits": 3, "prereqs": ["BA320"], "category": "elective"},
-                    "BUS330": {"name": "Operations Analytics", "credits": 3, "prereqs": ["BA320"], "category": "elective"},
-                    "BUS340": {"name": "Financial Analytics", "credits": 3, "prereqs": ["BA320", "ACCT201"], "category": "elective"},
-                    "HUM200": {"name": "Humanities Elective", "credits": 3, "prereqs": [], "category": "humanities"},
-                    "SOC200": {"name": "Social Science Elective", "credits": 3, "prereqs": [], "category": "social"},
-                    "BA490": {"name": "Analytics Capstone", "credits": 3, "prereqs": ["BA320"], "category": "capstone"},
-                },
-                "degree_requirements": {
-                    "required_courses": [
-                        "COLL100", "ENG110", "MATH110", "STAT200", "BUS101", "ECON210", "ACCT201",
-                        "BA220", "BA250", "BA310", "BA320", "BA490",
-                    ],
-                    "min_credits": 120,
-                    "min_humanities_credits": 6,
-                    "min_social_credits": 6,
-                    "min_elective_credits": 9,
-                },
-                "four_year_template": [
-                    ["COLL100", "ENG110", "BUS101", "MATH110"],
-                    ["ECON210", "ACCT201", "BA220", "HUM200"],
-                    ["STAT200", "BA250", "SOC200", "GEN200"],
-                    ["BA310", "SOC200", "HUM200", "GEN201"],
-                    ["BA320", "ELX200", "ELX201", "GEN202"],
-                    ["ELX202", "ELX203", "GEN203", "GEN204"],
-                    ["ELX300", "ELX301", "GEN300", "GEN301"],
-                    ["BA490", "ELX302", "ELX303", "GEN302"],
-                ],
-                "default_electives": ["BUS320", "BUS330", "BUS340"],
-            },
-        }
-    },
-}
-
 
 def create_client() -> Any:
     api_key = os.getenv("OPENAI_API_KEY")
@@ -225,6 +39,7 @@ def create_client() -> Any:
         return None
     base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
     return OpenAI(api_key=api_key, base_url=base_url)
+
 
 
 def split_csv_codes(raw: str) -> Set[str]:

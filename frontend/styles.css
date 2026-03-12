@@ -1,14 +1,18 @@
 :root {
-  --bg: #f2efe8;
-  --surface: #fcfaf6;
-  --ink: #1f2a30;
-  --muted: #5f6a6f;
-  --accent: #1a7f72;
-  --accent-2: #f5a65b;
-  --user: #e6f3f0;
-  --bot: #ffffff;
-  --ring: rgba(26, 127, 114, 0.2);
-  --shadow: 0 20px 40px rgba(24, 46, 58, 0.12);
+  --bg: #0f172a;
+  --surface: #1a2332;
+  --ink: #f0f4f8;
+  --muted: #94a3b8;
+  --accent: #3b82f6;
+  --accent-2: #10b981;
+  --accent-3: #f59e0b;
+  --user: #1e3a8a;
+  --bot: #1e293b;
+  --ring: rgba(59, 130, 246, 0.2);
+  --shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --user-text: #dbeafe;
+  --bot-text: #e2e8f0;
+  --success: #10b981;
 }
 
 * {
@@ -21,9 +25,9 @@ body {
   font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(circle at 20% 10%, #ffd6a626 0, transparent 40%),
-    radial-gradient(circle at 90% 30%, #7bc7b61f 0, transparent 45%),
-    linear-gradient(160deg, var(--bg) 0%, #e7ecef 100%);
+    radial-gradient(circle at 20% 10%, #3b82f61a 0, transparent 40%),
+    radial-gradient(circle at 90% 30%, #10b9811f 0, transparent 45%),
+    linear-gradient(160deg, #0f172a 0%, #1a2332 100%);
 }
 
 .app-shell {
@@ -37,7 +41,8 @@ body {
 .hero {
   padding: 20px 18px;
   border-radius: 18px;
-  background: linear-gradient(140deg, #ffffffc7 0%, #f8f3e5eb 100%);
+  background: linear-gradient(140deg, #1e3a8a 0%, #1e293b 100%);
+  border: 1px solid #3b82f6;
   box-shadow: var(--shadow);
   animation: rise 500ms ease;
 }
@@ -61,8 +66,9 @@ h1 {
 }
 
 .chat-panel {
-  background: var(--surface);
+  background: #1a2332;
   border-radius: 18px;
+  border: 1px solid #334155;
   box-shadow: var(--shadow);
   overflow: hidden;
   display: grid;
@@ -73,7 +79,8 @@ h1 {
 .profile-panel {
   padding: 16px;
   border-radius: 18px;
-  background: #fffdf8;
+  background: #1a2332;
+  border: 1px solid #334155;
   box-shadow: var(--shadow);
   animation: rise 500ms ease;
 }
@@ -92,12 +99,12 @@ h1 {
 }
 
 .directory-toolbar input {
-  border: 1px solid #cfd8da;
+  border: 1px solid #475569;
   border-radius: 10px;
   padding: 9px 10px;
   font: inherit;
   color: var(--ink);
-  background: #fff;
+  background: #0f172a;
 }
 
 .directory-toolbar input:focus {
@@ -123,10 +130,10 @@ h1 {
 }
 
 .school-result-btn {
-  border: 1px solid #d7e2e4;
+  border: 1px solid #3b82f6;
   border-radius: 999px;
-  background: #fff;
-  color: var(--ink);
+  background: #1e3a8a;
+  color: #dbeafe;
   padding: 7px 10px;
   font: inherit;
   font-size: 0.86rem;
@@ -136,14 +143,14 @@ h1 {
 }
 
 .school-result-btn:hover {
-  border-color: #bad3ce;
-  background: #f7fbfa;
+  border-color: #60a5fa;
+  background: #1e40af;
 }
 
 .school-result-btn.active {
-  border-color: #98cfc4;
-  background: #e9f6f3;
-  color: #0f5f55;
+  border-color: #10b981;
+  background: #064e3b;
+  color: #86efac;
 }
 
 .school-results-more {
@@ -172,12 +179,12 @@ h1 {
 
 .profile-grid input,
 .profile-grid select {
-  border: 1px solid #cfd8da;
+  border: 1px solid #475569;
   border-radius: 10px;
   padding: 9px 10px;
   font: inherit;
   color: var(--ink);
-  background: #fff;
+  background: #0f172a;
 }
 
 
@@ -198,10 +205,18 @@ h1 {
 .quick-btn {
   padding: 8px 12px;
   border-radius: 999px;
-  border: 1px solid #cfe0dc;
-  background: #eff8f6;
-  color: #0f5f55;
+  border: 1px solid #3b82f6;
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  color: #dbeafe;
   font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.quick-btn:hover {
+  border-color: #60a5fa;
+  background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
 }
 
 .chat-log {
@@ -210,6 +225,7 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  background: #0f172a;
 }
 
 .bubble-wrap {
@@ -228,34 +244,36 @@ h1 {
   line-height: 1.45;
   padding: 11px 13px;
   border-radius: 14px;
-  border: 1px solid #d9e4e6;
-  background: var(--bot);
+  border: 1px solid #3b82f6;
+  background: #1e293b;
+  color: var(--bot-text);
   animation: rise 280ms ease;
 }
 
 .user .bubble {
-  background: var(--user);
-  border-color: #b9d9d3;
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  border-color: #3b82f6;
+  color: var(--user-text);
 }
 
 .composer {
-  border-top: 1px solid #dbe2e3;
+  border-top: 1px solid #334155;
   padding: 10px;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 10px;
-  background: #fffefb;
+  background: #0f172a;
 }
 
 textarea {
   width: 100%;
   resize: none;
-  border: 1px solid #cfd8da;
+  border: 1px solid #475569;
   border-radius: 10px;
   padding: 10px;
   font: inherit;
   color: var(--ink);
-  background: #fff;
+  background: #1a2332;
   transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
@@ -268,11 +286,17 @@ textarea:focus {
 button {
   border: 0;
   border-radius: 10px;
-  background: linear-gradient(140deg, var(--accent) 0%, #0e6f63 100%);
+  background: linear-gradient(140deg, #3b82f6 0%, #2563eb 100%);
   color: #fff;
   font-weight: 700;
   padding: 0 16px;
   cursor: pointer;
+  transition: all 150ms ease;
+}
+
+button:hover {
+  background: linear-gradient(140deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
 }
 
 button:disabled {
