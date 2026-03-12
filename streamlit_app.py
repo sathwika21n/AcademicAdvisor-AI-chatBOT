@@ -24,16 +24,16 @@ def inject_styles() -> None:
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
         :root {
-            --bg-a: #f8f6f2;
-            --bg-b: #e9f7f6;
-            --ink: #15202b;
-            --muted: #4c6170;
-            --card: #ffffff;
-            --accent: #0f766e;
-            --accent-2: #0b5b98;
-            --accent-soft: #d8f3f0;
-            --line: #d5e3ea;
-            --shadow: 0 12px 35px rgba(21, 32, 43, 0.08);
+            --bg-a: #07111c;
+            --bg-b: #102436;
+            --ink: #edf7ff;
+            --muted: #a8c0d2;
+            --card: #10283a;
+            --accent: #1cc39d;
+            --accent-2: #59a9ff;
+            --accent-soft: #103f38;
+            --line: #2b4b60;
+            --shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
         }
 
         html, body, [class*="css"] {
@@ -43,14 +43,13 @@ def inject_styles() -> None:
 
         .stApp {
             background:
-                radial-gradient(60rem 60rem at 10% -5%, #ffffff 5%, rgba(255,255,255,0) 45%),
-                radial-gradient(42rem 42rem at 90% 0%, #dff4f0 4%, rgba(223,244,240,0) 50%),
-                linear-gradient(140deg, var(--bg-a) 0%, var(--bg-b) 100%);
+                radial-gradient(52rem 52rem at 12% -8%, rgba(28,195,157,0.18) 1%, rgba(28,195,157,0) 50%),
+                radial-gradient(50rem 50rem at 100% -12%, rgba(89,169,255,0.20) 2%, rgba(89,169,255,0) 50%),
+                linear-gradient(150deg, var(--bg-a) 0%, var(--bg-b) 100%);
         }
 
         [data-testid="stSidebar"] {
-            background:
-                linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(233,247,246,0.95) 100%);
+            background: linear-gradient(180deg, rgba(9,25,38,0.95), rgba(11,33,49,0.95) 100%);
             border-right: 1px solid var(--line);
         }
 
@@ -58,6 +57,26 @@ def inject_styles() -> None:
         [data-testid="stSidebar"] label,
         [data-testid="stSidebar"] div {
             color: var(--ink);
+        }
+
+        /* Ensure login page text remains readable on dark surfaces */
+        [data-testid="stForm"] label,
+        [data-testid="stForm"] .stMarkdown,
+        [data-testid="stForm"] p,
+        [data-testid="stForm"] span,
+        [data-testid="stForm"] div {
+            color: #eff8ff !important;
+        }
+
+        .hero h1,
+        .hero .subhead,
+        .hero .eyebrow {
+            color: #f3fbff !important;
+        }
+
+        .stCaption,
+        [data-testid="stForm"] .stCaption {
+            color: #d6ecff !important;
         }
 
         h1, h2, h3, h4 {
@@ -68,10 +87,10 @@ def inject_styles() -> None:
 
         .hero {
             padding: 1.45rem 1.2rem 1.1rem 1.2rem;
-            border: 1px solid rgba(255,255,255,0.85);
+            border: 1px solid rgba(87,166,255,0.25);
             border-radius: 20px;
             background:
-                linear-gradient(125deg, rgba(15,118,110,0.14), rgba(11,91,152,0.09) 44%, rgba(255,255,255,0.90) 100%);
+                linear-gradient(130deg, rgba(25,194,155,0.25), rgba(87,166,255,0.22), rgba(14,34,48,0.92));
             box-shadow: var(--shadow);
             margin-bottom: 1rem;
         }
@@ -98,7 +117,7 @@ def inject_styles() -> None:
         .stChatMessage {
             border-radius: 16px;
             border: 1px solid var(--line);
-            background: var(--card);
+            background: #112c40;
             box-shadow: 0 8px 24px rgba(10, 45, 60, 0.06);
         }
 
@@ -106,8 +125,8 @@ def inject_styles() -> None:
             padding: 0.24rem 0.62rem;
             border-radius: 999px;
             border: 1px solid var(--line);
-            background: #fff;
-            color: var(--muted);
+            background: #123247;
+            color: #d8ebf8;
             font-size: 0.78rem;
             display: inline-block;
             margin-right: 0.45rem;
@@ -121,11 +140,11 @@ def inject_styles() -> None:
         }
 
         .visual-card {
-            border: 1px solid rgba(255,255,255,0.86);
+            border: 1px solid #31546d;
             border-radius: 16px;
             padding: 0.8rem 0.9rem;
             background:
-                linear-gradient(145deg, rgba(255,255,255,0.96), rgba(231,245,246,0.95));
+                linear-gradient(145deg, rgba(18,49,71,0.95), rgba(16,40,59,0.95));
             box-shadow: 0 10px 25px rgba(21, 32, 43, 0.08);
         }
 
@@ -176,21 +195,49 @@ def inject_styles() -> None:
 
         .stButton > button {
             border-radius: 12px;
-            border: 1px solid #c7dbe6;
-            background: linear-gradient(140deg, #ffffff, #edf8ff);
-            color: var(--ink);
+            border: 1px solid #37607a;
+            background: linear-gradient(145deg, #12344b, #15455f);
+            color: #e8f4ff;
             font-weight: 600;
         }
 
         .stButton > button:hover {
-            border-color: #97bcd1;
-            color: #0d4f81;
+            border-color: #57a6ff;
+            color: #ffffff;
+            box-shadow: 0 10px 22px rgba(87,166,255,0.28);
         }
 
         [data-testid="stChatInput"] {
-            border: 1px solid #c9dae4;
+            border: 1px solid #3f6680;
             border-radius: 14px;
-            box-shadow: 0 7px 16px rgba(21, 32, 43, 0.06);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+        }
+
+        .stTextInput > div > div > input,
+        .stTextArea textarea {
+            background-color: #0e2b40 !important;
+            color: #edf7ff !important;
+            border: 1px solid #4f7791 !important;
+            border-radius: 10px !important;
+        }
+
+        .stTextInput > div > div > input::placeholder,
+        .stTextArea textarea::placeholder {
+            color: #9bc0d8 !important;
+            opacity: 1;
+        }
+
+        .stTextInput > div > div > input:focus,
+        .stTextArea textarea:focus {
+            border: 1px solid #63b6ff !important;
+            box-shadow: 0 0 0 2px rgba(99, 182, 255, 0.28) !important;
+        }
+
+        [data-testid="stForm"] {
+            background: linear-gradient(165deg, rgba(15,43,63,0.9), rgba(14,35,52,0.9));
+            border: 1px solid #2f556f;
+            border-radius: 16px;
+            padding: 1rem;
         }
 
         @media (max-width: 900px) {

@@ -257,11 +257,41 @@ def get_program(college: str, major: str) -> Tuple[str, str, Dict[str, Any] | No
     return default_college, default_major, None
 
 
+def normalize_text(value: str) -> str:
+    return re.sub(r"\s+", " ", (value or "").strip().lower())
+
+
+def fuzzy_match_name(target: str, choices: List[str]) -> str | None:
+    needle = normalize_text(target)
+    if not needle:
+        return None
+    normalized = {normalize_text(choice): choice for choice in choices}
+    if needle in normalized:
+        return normalized[needle]
+    for key, value in normalized.items():
+        if needle in key or key in needle:
+            return value
+    return None
+
+
 def get_resolved_program(profile: Dict[str, Any]) -> Tuple[str, str, Dict[str, Any], bool]:
     selected_college = (profile.get("college") or "").strip()
     selected_major = (profile.get("major") or "").strip()
     if selected_college in ACADEMIC_DATA and selected_major in ACADEMIC_DATA[selected_college]["majors"]:
         return selected_college, selected_major, ACADEMIC_DATA[selected_college]["majors"][selected_major], True
+
+    # Try case-insensitive / partial matching before giving up.
+    resolved_college = fuzzy_match_name(selected_college, list(ACADEMIC_DATA.keys()))
+    if resolved_college:
+        resolved_major = fuzzy_match_name(selected_major, list(ACADEMIC_DATA[resolved_college]["majors"].keys()))
+        if resolved_major:
+            return (
+                resolved_college,
+                resolved_major,
+                ACADEMIC_DATA[resolved_college]["majors"][resolved_major],
+                True,
+            )
+
     default_college = next(iter(ACADEMIC_DATA))
     default_major = next(iter(ACADEMIC_DATA[default_college]["majors"]))
     return default_college, default_major, ACADEMIC_DATA[default_college]["majors"][default_major], False
@@ -325,6 +355,25 @@ def generate_plan(completed: Set[str], program: Dict[str, Any], major_name: str)
             lines.append(f"- {warning}")
     lines.append("")
     lines.append("Confirm this plan against the official catalog and department advisor.")
+    return "\n".join(lines)
+
+
+def generate_generic_plan(major_name: str, year: str, interests: str) -> str:
+    focus = major_name or "your major"
+    standing = year or "current standing"
+    interests_note = interests or "your interests"
+    lines = [f"Suggested 4-Year Plan ({focus}, generic template):"]
+    lines.append(f"- Assumptions: built for {focus} based on {standing} and {interests_note}.")
+    lines.append("- Year 1 Fall [14-16 cr]: First-year seminar; writing/communication; intro major course; math foundation.")
+    lines.append("- Year 1 Spring [14-16 cr]: Next math/stat course; second intro major course; social science; humanities.")
+    lines.append("- Year 2 Fall [14-16 cr]: Core major sequence I; lab/project course; general education.")
+    lines.append("- Year 2 Spring [14-16 cr]: Core major sequence II; data/research methods; general education.")
+    lines.append("- Year 3 Fall [14-16 cr]: Upper-division core; first technical elective; minor/certificate course.")
+    lines.append("- Year 3 Spring [14-16 cr]: Upper-division core; second technical elective; internship/research prep.")
+    lines.append("- Year 4 Fall [12-15 cr]: Capstone prep; advanced elective; remaining graduation requirements.")
+    lines.append("- Year 4 Spring [12-15 cr]: Capstone/project; final electives; graduation audit and paperwork.")
+    lines.append("")
+    lines.append("If you share your exact degree requirements or catalog link, I can convert this to a course-by-course plan.")
     return "\n".join(lines)
 
 
@@ -452,7 +501,11 @@ def fallback_response(message: str, profile: Dict[str, Any]) -> str:
             )
         if "plan" in intents:
             sections.append(
-                "4-Year Plan:\n- I can draft a semester-by-semester plan structure and sequencing assumptions for your stated university/major."
+                generate_generic_plan(
+                    selected_major,
+                    (profile.get("year") or "").strip(),
+                    interests,
+                )
             )
         if "graduation" in intents:
             sections.append(
