@@ -11,6 +11,36 @@ except Exception:  # pragma: no cover
 
 from universities_data import ACADEMIC_DATA
 
+import glob
+import json
+
+
+def load_academic_data_json(dir_path: str) -> Dict[str, Dict[str, Any]]:
+    """Read all JSON files in `dir_path` and merge into a single dictionary."""
+    data: Dict[str, Dict[str, Any]] = {}
+    for fname in glob.glob(os.path.join(dir_path, "*.json")):
+        try:
+            with open(fname, "r") as f:
+                partial = json.load(f)
+            if isinstance(partial, dict):
+                data.update(partial)
+        except Exception:
+            # ignore malformed files
+            continue
+    return data
+
+
+def load_additional_data() -> Dict[str, Dict[str, Any]]:
+    """Load any extra university data placed under ./data directory."""
+    base = os.path.dirname(__file__)
+    data_dir = os.path.join(base, "data")
+    if os.path.isdir(data_dir):
+        return load_academic_data_json(data_dir)
+    return {}
+
+# merge external JSON data into the hardcoded dataset
+ACADEMIC_DATA.update(load_additional_data())
+
 
 SYSTEM_PROMPT = (
     "You are an AI academic advisor. Help with 4-year schedules, prerequisites, "

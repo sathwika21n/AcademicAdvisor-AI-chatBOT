@@ -66,3 +66,27 @@ Then open `http://localhost:5001`.
 - Without `OPENAI_API_KEY`, the app still works in rule-based advisor mode.
 - You can use OpenRouter because the backend uses the OpenAI-compatible SDK interface (`OPENAI_BASE_URL`).
 - The included catalog and graduation rules are sample data; adjust them to your university policy.
+
+## Scraping real catalog data
+
+Rather than maintaining `ACADEMIC_DATA` manually, you can pull course
+information from university catalog websites.
+
+A helper script lives in `utils/scrape_catalog.py` and works roughly like
+this:
+
+```bash
+python -m utils.scrape_catalog https://catalog.utdallas.edu/now/courses/cs \
+    > data/utd_cs.json
+```
+
+Modify `parse_table()` inside the script to match the HTML structure of
+each school's catalog; many modern catalogs are rendered with JavaScript
+and won’t contain any course rows in the raw HTML, in which case a simple
+`requests`/`BeautifulSoup` scraper won’t work. For those sites you’ll need
+a headless browser (e.g. Playwright, Selenium) or an official API.
+
+After saving JSON files under the `data/` directory, the backend
+automatically loads them when it starts (see `load_additional_data()` in
+`backend.py`).
+
