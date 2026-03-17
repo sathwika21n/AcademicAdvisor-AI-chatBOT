@@ -89,4 +89,3 @@ a headless browser (e.g. Playwright, Selenium) or an official API.
 After saving JSON files under the `data/` directory, the backend
 automatically loads them when it starts (see `load_additional_data()` in
 `backend.py`).
-

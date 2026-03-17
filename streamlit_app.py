@@ -29,13 +29,13 @@ def inject_styles() -> None:
             --ink: #f0f4f8;
             --muted: #94a3b8;
             --card: #1e293b;
-            --accent: #3b82f6;
-            --accent-2: #10b981;
-            --accent-3: #f59e0b;
-            --accent-soft: #1e3a8a;
+            --accent: #059669;
+            --accent-2: #0d9488;
+            --accent-3: #7c3aed;
+            --accent-soft: #064e3b;
             --line: #334155;
             --shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
-            --user-bg: #1e3a8a;
+            --user-bg: #064e3b;
             --bot-bg: #1e293b;
             --user-text: #dbeafe;
             --bot-text: #e2e8f0;
@@ -47,10 +47,7 @@ def inject_styles() -> None:
         }
 
         .stApp {
-            background:
-                radial-gradient(52rem 52rem at 12% -8%, rgba(59,130,246,0.15) 1%, rgba(59,130,246,0) 50%),
-                radial-gradient(50rem 50rem at 100% -12%, rgba(16,185,129,0.15) 2%, rgba(16,185,129,0) 50%),
-                linear-gradient(150deg, var(--bg-a) 0%, var(--bg-b) 100%);
+            background: linear-gradient(150deg, var(--bg-a) 0%, var(--bg-b) 100%);
         }
 
         [data-testid="stSidebar"] {
@@ -92,10 +89,10 @@ def inject_styles() -> None:
 
         .hero {
             padding: 1.45rem 1.2rem 1.1rem 1.2rem;
-            border: 1px solid #3b82f6;
+            border: 1px solid var(--accent);
             border-radius: 20px;
             background:
-                linear-gradient(130deg, #1e3a8a, #1e293b);
+                linear-gradient(130deg, var(--accent-soft), var(--card));
             box-shadow: var(--shadow);
             margin-bottom: 1rem;
         }
@@ -104,8 +101,8 @@ def inject_styles() -> None:
             display: inline-block;
             font-size: 0.78rem;
             font-weight: 700;
-            color: #dbeafe;
-            background: #1e40af;
+            color: #f0f4f8;
+            background: var(--accent-soft);
             border-radius: 999px;
             padding: 0.28rem 0.7rem;
             margin-bottom: 0.45rem;
@@ -122,7 +119,7 @@ def inject_styles() -> None:
         /* AI Chat Messages - Better Visibility */
         .stChatMessage[data-testid="stChatMessage"]:has(> div > div:first-child > p:contains("assistant")) {
             background: linear-gradient(135deg, #1e293b 0%, #1a2332 100%);
-            border: 1px solid #3b82f6;
+            border: 1px solid var(--accent);
             color: var(--bot-text);
         }
 
@@ -146,9 +143,9 @@ def inject_styles() -> None:
         .pill {
             padding: 0.24rem 0.62rem;
             border-radius: 999px;
-            border: 1px solid #3b82f6;
-            background: #1e3a8a;
-            color: #dbeafe;
+            border: 1px solid var(--accent);
+            background: var(--accent-soft);
+            color: #f0f4f8;
             font-size: 0.78rem;
             display: inline-block;
             margin-right: 0.45rem;
@@ -162,11 +159,11 @@ def inject_styles() -> None:
         }
 
         .visual-card {
-            border: 1px solid #3b82f6;
+            border: 1px solid var(--accent);
             border-radius: 16px;
             padding: 0.8rem 0.9rem;
             background:
-                linear-gradient(145deg, #1e3a8a, #1e293b);
+                linear-gradient(145deg, var(--accent-soft), var(--card));
             box-shadow: 0 10px 25px rgba(21, 32, 43, 0.08);
         }
 
@@ -204,28 +201,28 @@ def inject_styles() -> None:
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: linear-gradient(130deg, #3b82f6, #10b981);
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.16);
+            background: linear-gradient(130deg, var(--accent), var(--accent-2));
+            box-shadow: 0 0 0 3px rgba(5,150,105,0.16);
         }
 
         .bar {
             flex: 1;
             height: 5px;
             border-radius: 99px;
-            background: linear-gradient(90deg, rgba(59,130,246,0.92), rgba(16,185,129,0.72));
+            background: linear-gradient(90deg, rgba(5,150,105,0.92), rgba(13,148,136,0.72));
         }
 
         .stButton > button {
             border-radius: 12px;
-            border: 1px solid #3b82f6;
-            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            border: 1px solid var(--accent);
+            background: linear-gradient(145deg, var(--accent), var(--accent-2));
             color: #ffffff;
 
             font-weight: 600;
         }
 
         .stButton > button:hover {
-            border-color: #60a5fa;
+            border-color: var(--accent-2);
             color: #ffffff;
             box-shadow: 0 10px 22px rgba(59,130,246,0.4);
         }
@@ -252,13 +249,13 @@ def inject_styles() -> None:
 
         .stTextInput > div > div > input:focus,
         .stTextArea textarea:focus {
-            border: 1px solid #3b82f6 !important;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.28) !important;
+            border: 1px solid var(--accent) !important;
+            box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.28) !important;
         }
 
         [data-testid="stForm"] {
-            background: linear-gradient(165deg, rgba(15,23,42,0.9), rgba(26,35,50,0.9));
-            border: 1px solid #334155;
+            background: linear-gradient(165deg, rgba(15,23,42,0.95), rgba(26,35,50,0.95));
+            border: 1px solid var(--line);
             border-radius: 16px;
             padding: 1rem;
         }
@@ -312,7 +309,7 @@ def render_login() -> None:
     st.markdown(
         """
         <section class="hero">
-          <span class="eyebrow">Secure Access</span>
+          <span class="eyebrow">🔐 Secure Access</span>
           <h1 style="margin:0.15rem 0 0.15rem 0;">Sign In to DegreePath</h1>
           <p class="subhead">Use your account credentials to access advising tools.</p>
         </section>
@@ -402,7 +399,7 @@ def render_chat() -> None:
     st.markdown(
         """
         <section class="hero">
-          <span class="eyebrow">AI Academic Advisor</span>
+          <span class="eyebrow">🚀 AI Academic Advisor</span>
           <h1 style="margin:0.15rem 0 0.15rem 0;">DegreePath Advisor</h1>
           <p class="subhead">Build a 4-year roadmap, check prerequisites, discover electives, and audit graduation progress.</p>
         </section>
@@ -413,19 +410,19 @@ def render_chat() -> None:
         """
         <section class="visual-grid">
           <article class="visual-card">
-            <p class="visual-title">Roadmap Focus</p>
+            <p class="visual-title">📅 Roadmap Focus</p>
             <p class="visual-value">8 Semesters</p>
             <p class="visual-note">Balanced workload with prerequisite sequencing.</p>
             <div class="timeline"><span class="dot"></span><span class="bar"></span></div>
           </article>
           <article class="visual-card">
-            <p class="visual-title">Personalization</p>
+            <p class="visual-title">🎯 Personalization</p>
             <p class="visual-value">Major + Interests</p>
             <p class="visual-note">Uses your profile for elective relevance and pacing.</p>
             <div class="timeline"><span class="dot"></span><span class="bar"></span></div>
           </article>
           <article class="visual-card">
-            <p class="visual-title">Audit View</p>
+            <p class="visual-title">✅ Audit View</p>
             <p class="visual-value">Progress Checks</p>
             <p class="visual-note">Identifies completed, pending, and at-risk requirements.</p>
             <div class="timeline"><span class="dot"></span><span class="bar"></span></div>
@@ -435,18 +432,18 @@ def render_chat() -> None:
         unsafe_allow_html=True,
     )
     st.markdown(
-        '<span class="pill">4-Year Planner</span><span class="pill">Prereq Checker</span><span class="pill">Elective Recommender</span><span class="pill">Grad Audit</span>',
+        '<span class="pill">📚 4-Year Planner</span><span class="pill">🔍 Prereq Checker</span><span class="pill">💡 Elective Recommender</span><span class="pill">🎓 Grad Audit</span>',
         unsafe_allow_html=True,
     )
 
     col1, col2, col3, col4 = st.columns(4)
-    if col1.button("Plan 4-Year Schedule", use_container_width=True):
+    if col1.button("📅 Plan 4-Year Schedule", use_container_width=True):
         st.session_state.quick_prompt = "Build my 4-year degree schedule."
-    if col2.button("Check Prerequisites", use_container_width=True):
+    if col2.button("🔍 Check Prerequisites", use_container_width=True):
         st.session_state.quick_prompt = "Check prerequisites for CS220 and CS310."
-    if col3.button("Suggest Electives", use_container_width=True):
+    if col3.button("💡 Suggest Electives", use_container_width=True):
         st.session_state.quick_prompt = "Suggest electives based on my interests."
-    if col4.button("Graduation Audit", use_container_width=True):
+    if col4.button("🎓 Graduation Audit", use_container_width=True):
         st.session_state.quick_prompt = "Audit my graduation requirements."
 
     for msg in st.session_state.messages:
@@ -473,6 +470,17 @@ def render_chat() -> None:
     st.session_state.messages.append({"role": "assistant", "content": reply})
 
 
+def render_footer() -> None:
+    st.markdown(
+        """
+        <footer style="text-align: center; margin-top: 2rem; padding: 1rem; border-top: 1px solid var(--line); color: var(--muted);">
+            <p>Built with ❤️ for students | Powered by AI & Streamlit</p>
+        </footer>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def main() -> None:
     inject_styles()
     init_state()
@@ -481,6 +489,7 @@ def main() -> None:
         return
     render_sidebar()
     render_chat()
+    render_footer()
 
 
 if __name__ == "__main__":
