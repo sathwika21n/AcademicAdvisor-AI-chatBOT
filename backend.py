@@ -120,6 +120,23 @@ def fuzzy_match_name(target: str, choices: List[str]) -> str | None:
 
 
 def get_resolved_program(profile: Dict[str, Any]) -> Tuple[str, str, Dict[str, Any], bool]:
+    # Check for custom uploaded degree data first
+    custom_data = profile.get("custom_degree_data")
+    if custom_data:
+        # Assume the major is from profile, or default
+        major = profile.get("major", "Custom Major")
+        college = profile.get("college", "Custom University")
+        # Format custom_data to match expected structure
+        program_data = {
+            "courses": custom_data.get("courses", {}),
+            "four_year_template": custom_data.get("four_year_template", []),
+            "prereqs": custom_data.get("prerequisites", {}),
+            "electives": custom_data.get("electives", []),
+            "total_credits": custom_data.get("total_credits", 120),
+            "special_requirements": custom_data.get("special_requirements", [])
+        }
+        return college, major, program_data, True
+
     selected_college = (profile.get("college") or "").strip()
     selected_major = (profile.get("major") or "").strip()
     if selected_college in ACADEMIC_DATA and selected_major in ACADEMIC_DATA[selected_college]["majors"]:

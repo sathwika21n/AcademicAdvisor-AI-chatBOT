@@ -394,6 +394,151 @@ def render_sidebar() -> None:
             height=95,
         )
 
+        st.divider()
+        st.header("Degree Plan Upload")
+        st.caption("Upload your college's degree flowchart/diagram (PNG, JPG, PDF) to enable personalized advising from your specific requirements.")
+        uploaded_file = st.file_uploader("Choose a file", type=["png", "jpg", "jpeg", "pdf"])
+        if uploaded_file is not None:
+            if st.button("Process Degree Plan", use_container_width=True):
+                with st.spinner("Analyzing degree plan..."):
+                    extracted_data = process_degree_plan(uploaded_file)
+                    if extracted_data:
+                        st.session_state.profile["custom_degree_data"] = extracted_data
+                        st.success("Degree plan processed successfully!")
+                    else:
+                        st.error("Failed to process the degree plan. Please try again.")
+
+
+def process_degree_plan(uploaded_file) -> Dict[str, Any] | None:
+    """Process uploaded degree plan file and extract requirements using AI."""
+    try:
+        import base64
+        from io import BytesIO
+        
+        # Read file
+        file_bytes = uploaded_file.read()
+        
+        # For images, encode to base64
+        if uploaded_file.type in ["image/png", "image/jpg", "image/jpeg"]:
+            encoded_image = base64.b64encode(file_bytes).decode('utf-8')
+            image_url = f"data:{uploaded_file.type};base64,{encoded_image}"
+            
+            # Use OpenAI vision API
+            client = backend.create_client()
+            if client:
+                response = client.chat.completions.create(
+                    model="gpt-4o-mini",  # or gpt-4o for better vision
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": "Extract the degree requirements from this flowchart/diagram. Format as JSON with the following structure: {\"courses\": {\"COURSE_CODE\": {\"name\": \"Course Name\", \"credits\": 3, \"prereqs\": [\"PREREQ1\"]}}, \"four_year_template\": [[\"COURSE1\", \"COURSE2\"], [\"COURSE3\"], ...], \"electives\": [\"ELECTIVE1\"], \"total_credits\": 120, \"special_requirements\": [\"Requirement1\"]}. Include all required courses, prerequisites, electives, and suggest a 4-year plan structure."
+                                },
+                                {
+                                    "type": "image_url",
+                                    "image_url": {"url": image_url}
+                                }
+                            ]
+                        }
+                    ],
+                    max_tokens=1000
+                )
+                content = response.choices[0].message.content
+                # Parse JSON
+                import json
+                return json.loads(content.strip('```json').strip('```'))
+            else:
+                st.error("AI client not available. Please set OPENAI_API_KEY.")
+                return None
+        elif uploaded_file.type == "application/pdf":
+            # Process PDF
+            try:
+                import fitz  # PyMuPDF
+                
+                # Open PDF
+                doc = fitz.open(stream=file_bytes, filetype="pdf")
+                
+                # Extract text from all pages
+                text_content = ""
+                images = []
+                
+                for page_num in range(min(len(doc), 5)):  # Limit to first 5 pages
+                    page = doc.load_page(page_num)
+                    text_content += page.get_text() + "\n"
+                    
+                    # Also extract images if any
+                    for img_index, img in enumerate(page.get_images(full=True)):
+                        xref = img[0]
+                        base_image = doc.extract_image(xref)
+                        image_bytes = base_image["image"]
+                        images.append(image_bytes)
+                
+                doc.close()
+                
+                # If we have images, use vision API on the first image
+                if images:
+                    encoded_image = base64.b64encode(images[0]).decode('utf-8')
+                    image_url = f"data:image/png;base64,{encoded_image}"
+                    
+                    client = backend.create_client()
+                    if client:
+                        response = client.chat.completions.create(
+                            model="gpt-4o-mini",
+                            messages=[
+                                {
+                                    "role": "user",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": f"Extract the degree requirements from this PDF flowchart/diagram. Here's the extracted text: {text_content[:2000]}. Format as JSON with the following structure: {{\"courses\": {{\"COURSE_CODE\": {{\"name\": \"Course Name\", \"credits\": 3, \"prereqs\": [\"PREREQ1\"]}}}}, \"four_year_template\": [[\"COURSE1\", \"COURSE2\"], [\"COURSE3\"], ...], \"electives\": [\"ELECTIVE1\"], \"total_credits\": 120, \"special_requirements\": [\"Requirement1\"]}}. Include all required courses, prerequisites, electives, and suggest a 4-year plan structure."
+                                        },
+                                        {
+                                            "type": "image_url",
+                                            "image_url": {"url": image_url}
+                                        }
+                                    ]
+                                }
+                            ],
+                            max_tokens=1000
+                        )
+                        content = response.choices[0].message.content
+                        import json
+                        return json.loads(content.strip('```json').strip('```'))
+                    else:
+                        st.error("AI client not available. Please set OPENAI_API_KEY.")
+                        return None
+                else:
+                    # No images, use text-only
+                    client = backend.create_client()
+                    if client:
+                        response = client.chat.completions.create(
+                            model="gpt-4o-mini",
+                            messages=[
+                                {
+                                    "role": "user",
+                                    "content": f"Extract the degree requirements from this PDF text content: {text_content[:4000]}. Format as JSON with the following structure: {{\"courses\": {{\"COURSE_CODE\": {{\"name\": \"Course Name\", \"credits\": 3, \"prereqs\": [\"PREREQ1\"]}}}}, \"four_year_template\": [[\"COURSE1\", \"COURSE2\"], [\"COURSE3\"], ...], \"electives\": [\"ELECTIVE1\"], \"total_credits\": 120, \"special_requirements\": [\"Requirement1\"]}}. Include all required courses, prerequisites, electives, and suggest a 4-year plan structure."
+                                }
+                            ],
+                            max_tokens=1000
+                        )
+                        content = response.choices[0].message.content
+                        import json
+                        return json.loads(content.strip('```json').strip('```'))
+                    else:
+                        st.error("AI client not available. Please set OPENAI_API_KEY.")
+                        return None
+            except Exception as e:
+                st.error(f"Error processing PDF: {str(e)}")
+                return None
+        else:
+            st.error("Unsupported file type. Please upload an image or PDF.")
+            return None
+    except Exception as e:
+        st.error(f"Error processing file: {str(e)}")
+        return None
+
 
 def render_chat() -> None:
     st.markdown(
